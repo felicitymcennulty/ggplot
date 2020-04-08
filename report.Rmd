@@ -1,0 +1,58 @@
+---
+title: "Untitled"
+output: html_document
+author: Felicity
+date: 08/APR/2020
+---
+
+# Title Learning to use R markdown
+create some **bold** text or in _italics_
+
+note you need a blank line between text otherwise it will wrap it onto the same line
+
+```
+a block of code that is not activated
+```
+
+1. text 1
+2. text 2
+3. text 3
+
+* text 1
+* text 2
+* text 3
+
+## 2nd level header Initialisation: Load the libraries
+
+test
+
+### Hide the messages uses message FALSE
+
+```{r, message=FALSE}
+library(tidyverse)
+```
+
+
+## 2nd level header Data Manipulation: Loading the data and filtering for Australia only
+
+test
+
+### run the code using results hide - doesn't show the print to screen dataframe
+
+```{r, results='hide'}
+
+gapminder <- read_csv("data/gapminder_data.csv")
+gapminder_australia <- filter(gapminder, country == "Australia") #filter to get the Australian only data
+gapminder_australia #print the dataframe to the screen
+
+```
+
+### 3rd level header Plotting: Creating a graph of Australian population over time
+
+```{r}
+ggplot(gapminder_australia, aes(x= year, y = pop))+
+  geom_point()+
+  geom_line()+
+  labs(title = "Australian population over time")
+```
+
