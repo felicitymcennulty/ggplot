@@ -147,7 +147,7 @@ gapminder %>%
 
 a_countries <- filter(gapminder, str_starts(country, "A")) #any countries that start with A
 
-ggplot(a_countries, aes(x = year, y = lifeExp, colour = continent, group - country))+
+ggplot(a_countries, aes(x = year, y = lifeExp, colour = continent, group = country))+
   geom_line()+
   facet_wrap(~country)
 
@@ -162,5 +162,106 @@ gapminder %>%
   facet_wrap(~year)
 
 #ggplot(<DATA>, <AESTHETIC MAPPINGS>) + <GEOM> + <GEOM> + <SCALES> + <FACETS>
+
+#task 13
+#Create a density plot of population, filled by continent.
+
+# Transform the x axis to better visualise the data spread.
+# Add a facet layer to panel the density plots by year.
+
+gapminder %>% 
+  ggplot(aes(pop, fill = continent))+
+  geom_density(alpha = 0.6)+
+  scale_x_log10()+
+  facet_wrap(~year)
+
+
+#Use the agridat package to visualise some agricultural data.
+
+#Explore the blackman.wheat dataset from agridat. 
+#Generate a plot that shows the effect of fertiliser treatment across genotypes (gen) and sites (loc).
+
+install.packages("agridat")
+library(agridat)
+
+blackman.wheat
+
+#by genotype  by site
+blackman.wheat %>%
+  ggplot(aes(x = gen, y = yield, shape = nitro, group = loc))+
+  geom_point()+
+  facet_wrap(~loc)
+
+#by
+blackman.wheat %>%
+  ggplot(aes(x = loc, y = yield, shape = nitro, group = gen))+
+  geom_point()+
+  facet_wrap(~gen)
+
+blackman.wheat %>%
+  ggplot(aes(x = gen, y = loc, colour = nitro))+
+  geom_point()+
+  geom_line()+
+  geom_jitter()
+
+#Tina
+blackman.wheat %>%
+  ggplot(aes(x = nitro, y = yield, colour = gen))+
+  geom_point()+
+  geom_line(aes())
+
+
+#08/APR/2020
+rough_plot <- 
+  ggplot(data = a_countries, aes(x = year, y = lifeExp, colour = continent))+
+  geom_line()+
+  facet_wrap(~country)
+
+#labs - by default labels are the column names of the visual aethetics mapped above
+
+#add labels to existing ggplot
+lifeExp_plot <- 
+rough_plot +
+  labs(title = "Life expectancy changes from 1950 to 2009 for the 'A' countries",
+       x = "Year",
+       y = "Life Expectancy", 
+       colour = "Continent", #legend title
+       caption = "Data source: Gapminder")+
+  theme_bw()+
+  theme(panel.grid.minor = element_blank(),       #to overwrite theme_bw with other preferences
+        plot.title = element_text(face = "bold"), #to make the title of plot bold
+        strip.background = element_blank(),       # 'blank' resets the plot elements
+        panel.grid.major = element_line(size = 1), # increasing the size of the major gridlines
+        axis.title = element_text(size = 10, colour = "blue"), # changing the axis title to be shrunk and coloured blue
+        legend.position = "bottom")               # position ledgend at the bottom of the plot
+
+ggsave(filename = "results/lifeExp_wide.tiff", plot = lifeExp_plot, #can save as pgn, jpg, tiff
+       width = 16, height = 10, dpi = 300, units = "cm")
+
+##Cowplot
+install.packages("cowplot")
+library(cowplot)
+
+plot1 <- ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) + geom_point()
+
+plot2 <-  ggplot(gapminder, aes(x = continent, y = lifeExp)) + geom_boxplot()
+
+plot3 <- ggplot(gapminder, aes(gdpPercap, y = pop)) + geom_point()
+
+plot4 <-  ggplot(gapminder, aes(x = lifeExp, y = pop)) + geom_point()
+
+#put them all together with cowplot
+plot_grid(plot1, plot2, plot3, plot4)
+
+plot_grid(plot1, plot2, plot3, plot4, rel_heights = c(1,3) ,rel_widths = c(4,1)) # can adjust height and width
+
+#add labels
+plot_grid(plot1, plot2, plot3, plot4, labels = "AUTO") # if auto in lowercase will add a,b,c,d
+
+# can also add manually made labels
+
+
+
+
 
 
